@@ -3,7 +3,7 @@
 
  int runApp()
 {
-	printf("2 + 2 = %d", add (2, 2));
+	printf("2 + 2 = %d", add (3, 2));
 	getchar();
 	return 0;
 }

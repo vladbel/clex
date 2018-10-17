@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(lldb) Launch",
+            "name": "Debug GCC build/clex",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/clex",
+            "program": "${workspaceFolder}/build/clex",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
