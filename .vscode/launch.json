@@ -8,7 +8,7 @@
             "name": "Debug GCC build/clex",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/clex",
+            "program": "${workspaceFolder}/build/artifacts/clex",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
