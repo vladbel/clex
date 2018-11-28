@@ -1,13 +1,34 @@
 
-#include "clex.h"
+#include "app.h"
 
- int runApp()
-{
-	printf("2 + 4 = %d", add (2, 4));
+ int runApp(void)
+{	
+
+	setDependencies();
+	execute();
 	getchar();
 	return 0;
 }
- int add(int first, int second)
+
+ uint8_t setDependencies (void)
+ {
+	 uint8_t result = 0x01;
+	 return result;
+ }
+ uint8_t execute (void)
+ {
+	uint8_t first = 0x70;
+	uint8_t second = 0x80;
+	uint8_t result;
+	result = add(first, second);
+	printf("%02X + %02X = %02X\n", first, second, result);
+	printf("%02u + %002u = %003u\n", first, second, result);
+	printf("%02d + %02d = %02d\n", first, second, result);
+
+	return result;
+ }
+
+ uint8_t add(uint8_t first, uint8_t second)
 {
 	return first + second;
 } 
