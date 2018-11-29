@@ -10,7 +10,7 @@ all: clex
 clex: artifacts
 	@echo "-------------------------------------------"
 	@echo "Building executable:"
-	gcc -o $(ARTIFACTS_DIR)/clex -g $(ARTIFACTS_DIR)/main.o $(ARTIFACTS_DIR)/app.o $(ARTIFACTS_DIR)/linkedList.o
+	gcc -o $(ARTIFACTS_DIR)/clex -g $(ARTIFACTS_DIR)/main.o $(ARTIFACTS_DIR)/app.o $(ARTIFACTS_DIR)/dotGraph.o
 
 artifacts: source
 	@echo "-------------------------------------------"
@@ -24,7 +24,7 @@ artifacts: source
 	@echo "Compiling: "
 	gcc -o $(ARTIFACTS_DIR)/app.o -c -g $(SRC_DIR)/app.c
 	@echo "Compiling: "
-	gcc -o $(ARTIFACTS_DIR)/linkedList.o -c -g $(SRC_DIR)/linkedList.c
+	gcc -o $(ARTIFACTS_DIR)/dotGraph.o -c -g $(SRC_DIR)/dotGraph.c
 
 source:
 	@echo "-------------------------------------------"
