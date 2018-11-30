@@ -7,28 +7,32 @@ int runApp(void)
 {
   //instansiate graph handle
   dotGraph_handle_t graph;
-  dotGraph_node_t nodes[2];
-  dotGraph_edge_t edges[2];
+
 
   dotGraph_node_t *currentNode;
 
   bool success = true;
 
   success = success && 
-            dotGraph_initGraph(&graph, nodes, 2, edges, 2);
+            dotGraph_initGraph(&graph);
 
-  for (uint16_t i = 0; i < graph.numNodes; i++)
+  for (uint16_t i = 0; i < 2; i++)
   {
+    uint8_t id = i+10;
+    dotGraph_nodeAttributes_t attributes;
+    sprintf(attributes.label, "id:%d", id);
+    attributes.shape = DOT_GRAPH_NODE_PENTAGON;
+    attributes.color = i<7 ? i+1 : 7;
+    sprintf(attributes.customAttibutes, "ca=\"cv-%d\"", id);
+
     success = success &&
               dotGraph_getNewNodeInstance( &graph, &currentNode);
     
-    uint16_t id = i+10;
-    char attr[20];
-    sprintf(attr, "[label=\"%d\"]", id);
 
     success = success &&
               dotGraph_initNode(currentNode, 
-                                id);
+                                i+10,
+                                &attributes);
   }
 
   success = success &&

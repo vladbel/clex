@@ -6,6 +6,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define MAX_NODES 256
+#define MAX_EDGES_PER_NODE 8
+#define MAX_NODE_LABEL 16
+#define MAX_EDGE_LABEL 16
+#define MAX_CUSTOM_ATTIBUTE 128
+#define MAX_ATTRIBUTE 256
+
 typedef enum {
   DOT_GRAPH_NODE_BOX,
   DOT_GRAPH_NODE_POLYGON,
@@ -80,7 +87,7 @@ typedef enum {
   DOT_GRAPH_ARROW_NORMAL,
   DOT_GRAPH_ARROW_TEE,
   DOT_GRAPH_ARROW_VEE,
-} dotGraph_arrowTypes_e;
+} dotGraph_arrowStyles_e;
 
 typedef enum {
   DOT_GRAPH_LINE_SOLID,
@@ -92,7 +99,7 @@ typedef enum {
   DOT_GRAPH_LINE_FILLED,
   DOT_GRAPH_LINE_STRIPED,
   DOT_GRAPH_LINE_WEDGED,
-} dotGraph_lineTypes_e;
+} dotGraph_lineStyles_e;
 
 typedef enum
 {
@@ -101,54 +108,73 @@ typedef enum
   DOT_GRAPH_DEVICE_TYPE_UNKNOWN,
 } dotGraph_deviceTypes_e;
 
+// http://www.graphviz.org/doc/info/colors.html
+typedef enum
+{
+  DOT_GRAPHDOT_GRAPH_COLOR_NONE,
+  DOT_GRAPH_COLOR_SCHEME_ACCENT_6,
+  DOT_GRAPH_COLOR_SCHEME_DARK_28
+
+} dotGraph_colorScheme_e;
+
 typedef struct
 {
-  char* colorScheme;
+  dotGraph_colorScheme_e colorScheme;
   char* graphName;
-} dotGraph_graphSettings_t;
+} dotGraph_graphAttributes_t;
 
 typedef struct
 {
   dotGraph_nodeShape_e shape;
-  char label[20];
+  dotGraph_colorScheme_e colorScheme;
+  uint16_t color; //color number in color scheme e.g. 1 for "/dark28/1"
+  char label[MAX_NODE_LABEL];
+  char customAttibutes[MAX_CUSTOM_ATTIBUTE];
 } dotGraph_nodeAttributes_t;
 
-
 typedef struct
+{
+  dotGraph_arrowStyles_e arrowStyle;
+  dotGraph_lineStyles_e lineStyle;
+  char label[MAX_EDGE_LABEL];
+} dotGraph_edgeAttributes_t;
+
+
+struct dotGraph_edge_s;
+struct dotGraph_node_s;
+typedef struct dotGraph_edge_s
+{
+  bool initialized;
+  struct dotGraph_node_s *node_1; // parent
+  struct dotGraph_node_s *node_2; // child
+  dotGraph_edgeAttributes_t attributes;
+} dotGraph_edge_t;
+
+typedef struct dotGraph_node_s
 {
   bool initialized;
   uint16_t id;
   dotGraph_nodeAttributes_t attributes;
+  dotGraph_edge_t edges[MAX_EDGES_PER_NODE];
 } dotGraph_node_t;
 
-typedef struct
-{
-  bool initialized;
-  uint16_t id_1;
-  uint16_t id_2;
-} dotGraph_edge_t;
 
 typedef struct
 {
   bool initialized;
-  dotGraph_node_t *nodes;
-  uint16_t numNodes;
+  dotGraph_node_t nodes[MAX_NODES];
   uint16_t iNode; // node iterator
-  dotGraph_edge_t *edges;
-  dotGraph_graphSettings_t settings;
+  dotGraph_graphAttributes_t settings;
 } dotGraph_handle_t;
 
-bool dotGraph_initGraph(dotGraph_handle_t* self,
-                        dotGraph_node_t* nodes,
-                        uint16_t nNodes,
-                        dotGraph_edge_t *edges,
-                        uint16_t nEdges);
+bool dotGraph_initGraph(dotGraph_handle_t* self);
 
 bool dotGraph_getNewNodeInstance(dotGraph_handle_t *self,
                               dotGraph_node_t **node);
 
 bool dotGraph_initNode(dotGraph_node_t *self,
-                       uint16_t id);
+                       uint16_t id,
+                       dotGraph_nodeAttributes_t *attributes);
 
 bool dotGraph_writeToFile(dotGraph_handle_t* self);
 bool dotGraph_writeToLogs(dotGraph_handle_t* self);

@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <string.h>
 
-static dotGraph_graphSettings_t _defaultGraphSettings = {
-  .colorScheme = "/dark28/",
+static dotGraph_graphAttributes_t _defaultGraphSettings = {
+  .colorScheme = DOT_GRAPH_COLOR_SCHEME_DARK_28,
   .graphName = "MeshNetworkGraph"
 };
 
@@ -14,23 +14,20 @@ static dotGraph_nodeAttributes_t _defaultNodeSettings = {
   .label = "unknown"
 };
 
-#define LOG_MODULE LOG_HUB
+#define LOG_MODULE LOG_ZWGRAPH
 
 // Forward declarations
-static const char* _getNodeTypeStr(dotGraph_nodeShape_e nodeType);
-static const char* _getArrowTypeStr(dotGraph_arrowTypes_e arrowType);
-static const char* _getLineTypeStr(dotGraph_lineTypes_e lineType);
+static bool _printNodeAttributesStr (char* buf, dotGraph_nodeAttributes_t *attr);
+static const char* _getNodeShapeStr(dotGraph_nodeShape_e nodeType);
+static const char* _getArrowTypeStr(dotGraph_arrowStyles_e arrowType);
+static const char* _getLineTypeStr(dotGraph_lineStyles_e lineType);
+static const char* _getColorShemeStr(dotGraph_colorScheme_e colorScheme);
 
-bool dotGraph_initGraph(dotGraph_handle_t* self,
-                        dotGraph_node_t* nodes,
-                        uint16_t nNodes,
-                        dotGraph_edge_t *edges,
-                        uint16_t nEdges)
+bool dotGraph_initGraph(dotGraph_handle_t* self)
 {
-  self->nodes = nodes;
-  self->numNodes = nNodes;
 
-  for (uint16_t i; i<nNodes; i++)
+
+  for (uint16_t i; i < MAX_NODES; i++)
   {
     self->nodes[i].initialized = false;
   }
@@ -41,11 +38,10 @@ bool dotGraph_initGraph(dotGraph_handle_t* self,
   //memcpy(&self->settings, &_defaultGraphSettings, sizeof(dotGraph_graphSettings_t));
 }
 
-
 bool dotGraph_getNewNodeInstance(dotGraph_handle_t *self,
                                  dotGraph_node_t **node)
 {
-  if (self->initialized && self->iNode < self->numNodes)
+  if (self->initialized && self->iNode < MAX_NODES)
   {
     *node = &(self->nodes[self->iNode]);
     self->iNode++;
@@ -56,17 +52,21 @@ bool dotGraph_getNewNodeInstance(dotGraph_handle_t *self,
     *node = NULL;
     return false;
   }
-
-  //self->dni = dni;
-  //self->parentDni = parentDni;
-  //memcpy(&self->settings, &_defaultNodeSettings, sizeof(dotGraph_nodeSettings_t));
 }
 
 bool dotGraph_initNode(dotGraph_node_t *self,
-                       uint16_t id)
+                       uint16_t id,
+                       dotGraph_nodeAttributes_t *attributes)
 {
   self->id = id;
-  sprintf(self->attributes.label, "id=%d", id);
+
+  if(attributes != NULL)
+  {
+    memcpy(&self->attributes, 
+      attributes,
+      sizeof(dotGraph_nodeAttributes_t));
+  }
+
   self->initialized = true;
   return self->initialized;
 }
@@ -78,18 +78,74 @@ bool dotGraph_writeToFile(dotGraph_handle_t* self)
 
 bool dotGraph_writeToLogs(dotGraph_handle_t* self)
 {
-  for(uint16_t i = 0; i < self->numNodes; i++)
+
+  // print header
+  printf("---------------------------------\n");
+  printf("Print header: not implemented\n");
+
+  // print nodes
+  printf("\n---------------------------------\n");
+  printf("Print nodes: \n");
+  for(uint16_t i = 0; i < MAX_NODES; i++)
   {
     if (self->nodes[i].initialized)
     {
-      printf(" %d %s", self->nodes[i].id, self->nodes[i].attributes.label);
+      char attributes[MAX_ATTRIBUTE];
+      _printNodeAttributesStr(attributes, 
+                              &self->nodes[i].attributes);
+      printf("\n%d %s;", self->nodes[i].id, attributes);
     }
   }
+
+
+ // print edges
+  printf("\n---------------------------------\n");
+  printf("Print edges: not implemented\n");
+
+   // print edges
+  printf("\n---------------------------------\n");
+  printf("Print footer: not implemented\n");
+
+
+
 
   return true;
 }
 
-static const char* _getNodeTypeStr(dotGraph_nodeShape_e nodeType)
+static bool _printNodeAttributesStr (char* buf, 
+                                     dotGraph_nodeAttributes_t *attr)
+{
+  int attributesPrinted = 0;
+  attributesPrinted = sprintf( buf,
+                               "[label=\"%s\", color=\"%s%d\"",
+                               attr->label,
+                               _getColorShemeStr(attr->colorScheme),
+                               attr->color);
+  if(strlen(attr->customAttibutes) > 0)
+  {
+    attributesPrinted += sprintf(buf+attributesPrinted,
+                                 ", %s]",
+                                 attr->customAttibutes);
+  }
+  else
+  {
+    attributesPrinted += sprintf(buf+attributesPrinted,
+                                 "]");
+  }
+
+  return attributesPrinted < MAX_ATTRIBUTE;
+}
+
+static const char* _getColorShemeStr(dotGraph_colorScheme_e colorScheme)
+{
+  switch(colorScheme)
+  {
+    case DOT_GRAPH_COLOR_SCHEME_DARK_28: return "/dark28/";
+    case DOT_GRAPH_COLOR_SCHEME_ACCENT_6:return "/accent6/";
+    default: return "/dark28/";
+  }
+}
+static const char* _getNodeShapeStr(dotGraph_nodeShape_e nodeType)
 {
   switch(nodeType) {
     case DOT_GRAPH_NODE_BOX: return "box";
@@ -155,7 +211,7 @@ static const char* _getNodeTypeStr(dotGraph_nodeShape_e nodeType)
   }
 }
 
-static const char* _getArrowTypeStr(dotGraph_arrowTypes_e arrowType)
+static const char* _getArrowTypeStr(dotGraph_arrowStyles_e arrowType)
 {
   switch(arrowType) {
     case DOT_GRAPH_ARROW_BOX: return "box";
@@ -173,7 +229,7 @@ static const char* _getArrowTypeStr(dotGraph_arrowTypes_e arrowType)
   }
 }
 
-static const char* _getLineTypeStr(dotGraph_lineTypes_e lineType)
+static const char* _getLineTypeStr(dotGraph_lineStyles_e lineType)
 {
   switch(lineType)
   {
