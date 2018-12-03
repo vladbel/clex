@@ -7,6 +7,7 @@
 #include <stdbool.h>
 
 #define MAX_NODES 256
+#define MAX_EDGES 1024
 #define MAX_EDGES_PER_NODE 8
 #define MAX_NODE_LABEL 16
 #define MAX_EDGE_LABEL 16
@@ -145,8 +146,8 @@ struct dotGraph_node_s;
 typedef struct dotGraph_edge_s
 {
   bool initialized;
-  struct dotGraph_node_s *node_1; // parent
-  struct dotGraph_node_s *node_2; // child
+  struct dotGraph_node_s *pNode_1; // parent
+  struct dotGraph_node_s *pNode_2; // child
   dotGraph_edgeAttributes_t attributes;
 } dotGraph_edge_t;
 
@@ -155,7 +156,7 @@ typedef struct dotGraph_node_s
   bool initialized;
   uint16_t id;
   dotGraph_nodeAttributes_t attributes;
-  dotGraph_edge_t edges[MAX_EDGES_PER_NODE];
+  //dotGraph_edge_t edges[MAX_EDGES_PER_NODE];
 } dotGraph_node_t;
 
 
@@ -163,18 +164,25 @@ typedef struct
 {
   bool initialized;
   dotGraph_node_t nodes[MAX_NODES];
+  dotGraph_edge_t edges[MAX_EDGES];
   uint16_t iNode; // node iterator
-  dotGraph_graphAttributes_t settings;
+  uint16_t iEdge; // edge iterator
+  dotGraph_graphAttributes_t attributes;
 } dotGraph_handle_t;
 
 bool dotGraph_initGraph(dotGraph_handle_t* self);
 
-bool dotGraph_getNewNodeInstance(dotGraph_handle_t *self,
-                              dotGraph_node_t **node);
 
-bool dotGraph_initNode(dotGraph_node_t *self,
-                       uint16_t id,
+bool dotGraph_initNode(dotGraph_handle_t *self,
+                       dotGraph_node_t **node,
+                       uint16_t nodeId,
                        dotGraph_nodeAttributes_t *attributes);
+
+bool dotGraph_initEdge(dotGraph_handle_t *self,
+                       dotGraph_edge_t **ppEdge,
+                       uint16_t nodeId_1,
+                       uint16_t nodeId_2,
+                       dotGraph_edgeAttributes_t *attributes);
 
 bool dotGraph_writeToFile(dotGraph_handle_t* self);
 bool dotGraph_writeToLogs(dotGraph_handle_t* self);

@@ -4,12 +4,12 @@
 #include <stdint.h>
 #include <string.h>
 
-static dotGraph_graphAttributes_t _defaultGraphSettings = {
+static dotGraph_graphAttributes_t _defaultGraphAttributes = {
   .colorScheme = DOT_GRAPH_COLOR_SCHEME_DARK_28,
   .graphName = "MeshNetworkGraph"
 };
 
-static dotGraph_nodeAttributes_t _defaultNodeSettings = {
+static dotGraph_nodeAttributes_t _defaultNodeAttributes = {
   .shape = DOT_GRAPH_NODE_CIRCLE,
   .label = "unknown"
 };
@@ -17,7 +17,15 @@ static dotGraph_nodeAttributes_t _defaultNodeSettings = {
 #define LOG_MODULE LOG_ZWGRAPH
 
 // Forward declarations
-static bool _printNodeAttributesStr (char* buf, dotGraph_nodeAttributes_t *attr);
+static bool _printNodeAttributesStr (char* buf,
+                                     dotGraph_nodeAttributes_t *attr);
+static bool _getNewNodeInstance(dotGraph_handle_t *self,
+                                dotGraph_node_t **ppNode);
+static bool _getNodeInstance(dotGraph_handle_t *self,
+                             dotGraph_node_t **ppNode,
+                             uint16_t nodeId);
+static bool _getNewEdgeInstance(dotGraph_handle_t *self,
+                                dotGraph_edge_t **ppEdge);
 static const char* _getNodeShapeStr(dotGraph_nodeShape_e nodeType);
 static const char* _getArrowTypeStr(dotGraph_arrowStyles_e arrowType);
 static const char* _getLineTypeStr(dotGraph_lineStyles_e lineType);
@@ -27,48 +35,77 @@ bool dotGraph_initGraph(dotGraph_handle_t* self)
 {
 
 
-  for (uint16_t i; i < MAX_NODES; i++)
+  for (uint16_t i = 0; i < MAX_NODES; i++)
   {
     self->nodes[i].initialized = false;
   }
+
+  for (uint16_t i = 0; i < MAX_EDGES; i++)
+  {
+    self->edges[i].initialized = false;
+  }
   self->iNode = 0;
+  self->iEdge = 0;
   self->initialized = true;
 
   return self->initialized;
-  //memcpy(&self->settings, &_defaultGraphSettings, sizeof(dotGraph_graphSettings_t));
+  //memcpy(&self->attributes, &_defaultGraphAttributes, sizeof(dotGraph_graphattributes_t));
 }
 
-bool dotGraph_getNewNodeInstance(dotGraph_handle_t *self,
-                                 dotGraph_node_t **node)
-{
-  if (self->initialized && self->iNode < MAX_NODES)
-  {
-    *node = &(self->nodes[self->iNode]);
-    self->iNode++;
-    return true;
-  }
-  else
-  {
-    *node = NULL;
-    return false;
-  }
-}
 
-bool dotGraph_initNode(dotGraph_node_t *self,
-                       uint16_t id,
+
+bool dotGraph_initNode(dotGraph_handle_t *self,
+                       dotGraph_node_t **ppNode,
+                       uint16_t nodeId,
                        dotGraph_nodeAttributes_t *attributes)
 {
-  self->id = id;
+  bool success = _getNodeInstance(self, ppNode, nodeId) 
+                  ||
+                  _getNewNodeInstance(self, ppNode);
+
+  (*ppNode)->id = 0;
+
+  if (!success)
+  {
+    *ppNode = NULL;
+    return false;
+  }
+
+  (*ppNode)->id = nodeId;
 
   if(attributes != NULL)
   {
-    memcpy(&self->attributes, 
-      attributes,
-      sizeof(dotGraph_nodeAttributes_t));
+    memcpy(&(*ppNode)->attributes, 
+           attributes,
+           sizeof(dotGraph_nodeAttributes_t));
   }
 
-  self->initialized = true;
-  return self->initialized;
+  (*ppNode)->initialized = true;
+  return (*ppNode)->initialized;
+}
+
+bool dotGraph_initEdge(dotGraph_handle_t *self,
+                       dotGraph_edge_t **ppEdge,
+                       uint16_t nodeId_1,
+                       uint16_t nodeId_2,
+                       dotGraph_edgeAttributes_t *attributes)
+{
+
+
+  bool success = !_getNewEdgeInstance(self, ppEdge);
+  success = success &&
+            _getNodeInstance(self, &(*ppEdge)->pNode_1, nodeId_1) &&
+            _getNodeInstance(self, &(*ppEdge)->pNode_2, nodeId_2);
+
+  if(success && attributes != NULL)
+  {
+    memcpy(&(*ppEdge)->attributes, 
+          attributes,
+          sizeof(dotGraph_edgeAttributes_t));
+  }
+
+  (*ppEdge)->initialized = success;
+  return (*ppEdge)->initialized;
 }
 
 bool dotGraph_writeToFile(dotGraph_handle_t* self)
@@ -82,6 +119,7 @@ bool dotGraph_writeToLogs(dotGraph_handle_t* self)
   // print header
   printf("---------------------------------\n");
   printf("Print header: not implemented\n");
+  printf("Print graph attributes: not implemented\n");
 
   // print nodes
   printf("\n---------------------------------\n");
@@ -102,7 +140,7 @@ bool dotGraph_writeToLogs(dotGraph_handle_t* self)
   printf("\n---------------------------------\n");
   printf("Print edges: not implemented\n");
 
-   // print edges
+   // print footer
   printf("\n---------------------------------\n");
   printf("Print footer: not implemented\n");
 
@@ -243,5 +281,54 @@ static const char* _getLineTypeStr(dotGraph_lineStyles_e lineType)
     case DOT_GRAPH_LINE_STRIPED: return "striped";
     case DOT_GRAPH_LINE_WEDGED: return "wedged";
     default: return "solid";
+  }
+}
+
+static bool _getNewNodeInstance(dotGraph_handle_t *self,
+                                dotGraph_node_t **node)
+{
+  if (self->initialized && self->iNode < MAX_NODES)
+  {
+    *node = &(self->nodes[self->iNode]);
+    self->iNode++;
+    return true;
+  }
+  else
+  {
+    *node = NULL;
+    return false;
+  }
+}
+
+static bool _getNodeInstance(dotGraph_handle_t *self,
+                             dotGraph_node_t **ppNode,
+                             uint16_t nodeId)
+{
+  for (uint16_t i = 0; i < self->iNode; i++)
+  {
+    if (self->nodes[i].initialized && self->nodes[i].id == nodeId)
+    {
+      *ppNode = &(self->nodes[i]);
+      return true;
+    }
+  }
+
+  *ppNode = NULL;
+  return false;
+}
+
+static bool _getNewEdgeInstance(dotGraph_handle_t *self,
+                                dotGraph_edge_t **ppEdge)
+{
+  if (self->initialized && self->iEdge < MAX_EDGES)
+  {
+    *ppEdge = &(self->edges[self->iEdge]);
+    self->iEdge++;
+    return true;
+  }
+  else
+  {
+    *ppEdge = NULL;
+    return false;
   }
 }
