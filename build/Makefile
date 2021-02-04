@@ -16,7 +16,7 @@ clex: artifacts
 artifacts: component
 	@echo "-------------------------------------------"
 	@echo "4 - Compiling main: "
-	gcc -c $(SRC_DIR)/main.c -o $(ARTIFACTS_DIR)/main.o
+	gcc -c -g $(SRC_DIR)/main.c -o $(ARTIFACTS_DIR)/main.o
 
 component: clean
 	@echo "-------------------------------------------"

@@ -9,6 +9,6 @@
 	appInstance_getInterface((void*)&appInstance, &appInterface);
 	appInterface_execute(&appInterface);
 
-	printf("app instance.result = %d", appInstance.result);
+	printf("app instance.result = %d\n", appInstance.result);
 
 }
