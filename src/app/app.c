@@ -5,9 +5,9 @@ int runApp(void)
 {
 	setDependencies();
 	execute();
-	printf("before getchar()");
+	printf("before getchar()\n");
 	getchar();
-	printf("after getchar()");
+	printf("after getchar()\n");
 	return 0;
 }
 
