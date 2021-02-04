@@ -1,6 +1,5 @@
  #include <stdio.h>
-
-typedef u_int8_t uint8_t;
+ #include <stdint.h>
 
  int runApp();
  uint8_t setDependencies (void);

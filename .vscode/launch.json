@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "(lldb) external console",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/artifacts/clex",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "lldb"
+        },
+        {
             "name": "Debug GCC build/clex",
             "type": "cppdbg",
             "request": "launch",
