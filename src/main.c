@@ -1,14 +1,14 @@
 
-#include "app/appInterface.h"
+#include "task/taskInterface.h"
 
  int main()
 {
-	appInstance_t appInstance;
-	appInterface_t appInterface;
+	taskInstance_t taskInstance;
+	taskInterface_t taskInterface;
 
-	appInstance_getInterface((void*)&appInstance, &appInterface);
-	appInterface_execute(&appInterface);
+	taskInstance_getInterface((void*)&taskInstance, &taskInterface);
+	taskInterface_execute(&taskInterface);
 
-	printf("app instance.result = %d\n", appInstance.result);
+	printf("app instance.result = %d\n", taskInstance.result);
 
 }

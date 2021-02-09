@@ -1,8 +1,8 @@
 
-#include "appInterface.h"
+#include "taskInterface.h"
 
 
-void appInterface_execute(appInterface_t* interface)
+void taskInterface_execute(taskInterface_t* interface)
 {
 	if(interface != NULL 
 	&& interface->context != NULL 
