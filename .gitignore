@@ -1,6 +1,7 @@
 # build
 build/artifacts
 build_test/artifacts
+build_sort
 
 # Prerequisites
 *.d
