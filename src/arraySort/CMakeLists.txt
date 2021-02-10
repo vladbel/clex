@@ -1,5 +1,6 @@
 set(TARGET_LIB_ARRAY_SORT arraySort)
 set(TARGET_TEST_HEAP_SORT testHeapSort)
+set(TARGET_TEST_HEAP_SORT_DEBUG testHeapSortDebug)
 set(CMAKE_BUILD_TYPE Debug)
 set(BLOCK_SEPARATOR "------------------------")
 
@@ -32,3 +33,14 @@ target_compile_options(${TARGET_TEST_HEAP_SORT}
 )
 
 target_link_libraries(${TARGET_TEST_HEAP_SORT} ${TARGET_LIB_ARRAY_SORT})
+
+message(${BLOCK_SEPARATOR})
+
+add_executable(${TARGET_TEST_HEAP_SORT_DEBUG} test/testArraySortDebug.c)
+
+target_compile_options(${TARGET_TEST_HEAP_SORT_DEBUG}
+  PRIVATE
+  "-fPIC"
+)
+
+target_link_libraries(${TARGET_TEST_HEAP_SORT_DEBUG} ${TARGET_LIB_ARRAY_SORT})

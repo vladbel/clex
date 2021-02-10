@@ -1,17 +1,17 @@
 
 #include "arraySortInterface.h"
 
-static inline uint8_t _left(uint8_t index)
+static inline uint16_t _left(uint16_t index)
 {
     return (index * 2) + 1;
 }
 
-static inline uint8_t _right(uint8_t index)
+static inline uint16_t _right(uint16_t index)
 {
     return (index + 1) * 2;
 }
 
-static void _setMaxHeapProperty(arraySortInstance_t *self, uint8_t head)
+static void _setMaxHeapProperty(arraySortInstance_t *self, uint16_t head)
 {
     int16_t largest = head;
     if (_left(head) < self->length && self->array[_left(head)] > self->array[largest])
@@ -38,7 +38,7 @@ static void _sort(void *context)
     arraySortInstance_t *self = (arraySortInstance_t *)context;
     self->result = 6;
 
-    for (int16_t i = self->length / 2; i != 0; i--)
+    for (int16_t i = self->length / 2; i >= 0; i--)
     {
         _setMaxHeapProperty(self, i);
     }
