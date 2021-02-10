@@ -13,8 +13,8 @@ void arraySortInterface_sort ( arraySortInterface_t* interface);
 
 typedef struct arraySortInstance_s
 {
-    uint8_t* array;
-    uint8_t length;
+    int16_t* array;
+    int16_t length;
     uint8_t result;
 } arraySortInstance_t;
 

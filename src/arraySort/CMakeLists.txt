@@ -26,7 +26,6 @@ message(${BLOCK_SEPARATOR})
 
 add_executable(${TARGET_TEST_HEAP_SORT} test/testArraySort.c)
 
-
 target_compile_options(${TARGET_TEST_HEAP_SORT}
   PRIVATE
   "-fPIC"
