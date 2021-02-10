@@ -1,14 +1,14 @@
 #include "../../utests/acutest.h"
 #include "../arraySortInterface.h"
-void test_arraySortInstance(void)
+void test_arraySortInstance_01(void)
 {
 	int16_t array[3] = { 3, 2, 1};
 	arraySortInstance_t arraySortInstance;
-	arraySortInstance.array = array;
-	arraySortInstance.length = 3;
 	arraySortInterface_t arraySortInterface;
 
 	arrayHeapSortInstance_getInterface((void *)&arraySortInstance, &arraySortInterface);
+
+	arraySortInterface_init(&arraySortInterface, array, /* length = */3);
 	arraySortInterface_sort(&arraySortInterface);
 
 	TEST_CHECK(array[0] == 1);
@@ -16,5 +16,5 @@ void test_arraySortInstance(void)
 }
 
 TEST_LIST = {
-	{"test task instance", test_arraySortInstance},
+	{"Test heap sort on { 3, 2, 1}", test_arraySortInstance_01},
 	{NULL, NULL}};

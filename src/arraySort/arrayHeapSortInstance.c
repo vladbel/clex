@@ -56,8 +56,16 @@ static void _sort(void *context)
 	self->length = length;
 }
 
+static void _init(void *context, int16_t* array, int16_t length)
+{
+	arraySortInstance_t *self = (arraySortInstance_t *)context;
+	self->array = array;
+	self->length = length;
+}
+
 void arrayHeapSortInstance_getInterface(void *instance, arraySortInterface_t *interface)
 {
 	interface->context = instance;
+	interface->init_fn = _init;
 	interface->sort_fn = _sort;
 }
