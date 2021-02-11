@@ -1,7 +1,7 @@
 # build
-build/artifacts
-build_test/artifacts
-build_sort
+build
+make_build/artifacts
+make_build_test/artifacts
 
 # Prerequisites
 *.d
