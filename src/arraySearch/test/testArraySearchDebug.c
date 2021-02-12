@@ -2,31 +2,25 @@
 #include "../arraySearchInterface.h"
 #include <time.h>
 
-static void _validate(int16_t *array, int16_t length)
+static arraySearchInstance_t _runTest(int16_t *array, int16_t length)
 {
-    for (int16_t i = 1; i < length; i++)
-    {
-        TEST_CHECK(array[i - 1] <= array[i]);
-    }
-}
+    arraySearchInstance_t arraySearchInstance;
+    arraySearchInterface_t arraySearchInterface;
 
-static void _runTest(int16_t *array, int16_t length)
-{
-     arraySearchInstance_t  arraySearchInstance;
-     arraySearchInterface_t  arraySearchInterface;
+    arraySearchMaxSubarrayInstance_getInterface((void *)&arraySearchInstance, &arraySearchInterface);
 
-    arraySearchMaxSubarrayInstance_getInterface((void *)& arraySearchInstance, & arraySearchInterface);
-
-     arraySearchInterface_init(& arraySearchInterface, array, length);
-     arraySearchInterface_sort(& arraySearchInterface);
-
-    _validate(array, length);
+    arraySearchInterface_init(&arraySearchInterface, array, length);
+    arraySearchInterface_sort(&arraySearchInterface);
+    return arraySearchInstance;
 }
 
 void test_arraySearchInstance_01(void)
 {
-    int16_t array[3] = {3, 2, 1};
-    _runTest(array, 3);
+    int16_t array[7] = {-1, -1, 3, -1, 1, 1, -1};
+    arraySearchInstance_t arraySearchInstance = _runTest(array, 7);
+    TEST_CHECK(arraySearchInstance.subarraySum == 4);
+    TEST_CHECK(arraySearchInstance.subarrayStartIndex == 2);
+    TEST_CHECK(arraySearchInstance.subarrayEndIndex == 5);
 }
 
 /*

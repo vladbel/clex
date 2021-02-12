@@ -22,6 +22,9 @@ typedef struct arraySearchInstance_s
     int16_t *array;
     int16_t length;
     int16_t result;
+    int16_t subarrayStartIndex;
+    int16_t subarrayEndIndex;
+    int16_t subarraySum;
 } arraySearchInstance_t;
 
 void arraySearchMaxSubarrayInstance_getInterface(void *instance, arraySearchInterface_t *interface);
