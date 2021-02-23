@@ -1,5 +1,5 @@
 #include "../../utests/acutest.h"
-#include "../arraySortInterface.h"
+#include "../arraySortImplementation.h"
 #include <time.h>
 
 static void _validate(int16_t *array, int16_t length)
@@ -12,10 +12,10 @@ static void _validate(int16_t *array, int16_t length)
 
 static void _runTest(int16_t *array, int16_t length)
 {
-    arraySortInstance_t arraySortInstance;
+    arraySortImpl_t arraySortImpl;
     arraySortInterface_t arraySortInterface;
 
-    arrayHeapSortInstance_getInterface((void *)&arraySortInstance, &arraySortInterface);
+    arrayHeapSortImpl_getInterface((void *)&arraySortImpl, &arraySortInterface);
 
     arraySortInterface_init(&arraySortInterface, array, length);
     arraySortInterface_sort(&arraySortInterface);
@@ -23,7 +23,7 @@ static void _runTest(int16_t *array, int16_t length)
     _validate(array, length);
 }
 
-void test_arraySortInstance_01(void)
+void test_arraySortImpl_01(void)
 {
     int16_t array[3] = {3, 2, 1};
     _runTest(array, 3);
@@ -34,5 +34,5 @@ VS Code debugger does not step into test
 when more then ont test case in list
 */
 TEST_LIST = {
-    {"Test heap sort 01", test_arraySortInstance_01},
+    {"Test heap sort 01", test_arraySortImpl_01},
     {NULL, NULL}};

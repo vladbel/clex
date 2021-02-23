@@ -1,5 +1,5 @@
 
-#include "arraySortInterface.h"
+#include "arraySortImplementation.h"
 
 static inline uint16_t _left(uint16_t index)
 {
@@ -11,7 +11,7 @@ static inline uint16_t _right(uint16_t index)
     return (index + 1) * 2;
 }
 
-static void _setMaxHeapProperty(arraySortInstance_t *self, uint16_t head)
+static void _setMaxHeapProperty(arraySortImpl_t *self, uint16_t head)
 {
     int16_t largest = head;
     if (_left(head) < self->length && self->array[_left(head)] > self->array[largest])
@@ -35,7 +35,7 @@ static void _setMaxHeapProperty(arraySortInstance_t *self, uint16_t head)
 
 static void _sort(void *context)
 {
-    arraySortInstance_t *self = (arraySortInstance_t *)context;
+    arraySortImpl_t *self = (arraySortImpl_t *)context;
     self->result = 6;
 
     for (int16_t i = self->length / 2; i >= 0; i--)
@@ -58,12 +58,12 @@ static void _sort(void *context)
 
 static void _init(void *context, int16_t *array, int16_t length)
 {
-    arraySortInstance_t *self = (arraySortInstance_t *)context;
+    arraySortImpl_t *self = (arraySortImpl_t *)context;
     self->array = array;
     self->length = length;
 }
 
-void arrayHeapSortInstance_getInterface(void *instance, arraySortInterface_t *interface)
+void arrayHeapSortImpl_getInterface(void *instance, arraySortInterface_t *interface)
 {
     interface->context = instance;
     interface->init_fn = _init;

@@ -16,12 +16,3 @@ typedef struct arraySortInterface_s
 void arraySortInterface_init(arraySortInterface_t *interface, int16_t *array,
                              int16_t length);
 void arraySortInterface_sort(arraySortInterface_t *interface);
-
-typedef struct arraySortInstance_s
-{
-    int16_t *array;
-    int16_t length;
-    uint8_t result;
-} arraySortInstance_t;
-
-void arrayHeapSortInstance_getInterface(void *instance, arraySortInterface_t *interface);
