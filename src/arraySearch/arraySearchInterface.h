@@ -15,7 +15,7 @@ typedef struct arraySearchInterface_s
 
 void arraySearchInterface_init(arraySearchInterface_t *interface, int16_t *array,
                                int16_t length);
-void arraySearchInterface_sort(arraySearchInterface_t *interface);
+void arraySearchInterface_search(arraySearchInterface_t *interface);
 
 typedef struct arraySearchInstance_s
 {
@@ -27,4 +27,15 @@ typedef struct arraySearchInstance_s
     int16_t subarraySum;
 } arraySearchInstance_t;
 
+typedef struct arraySearchLrsInstance_s
+{
+    /*LRS - longest repeated sequence*/
+    int16_t *array;
+    int16_t length;
+    int16_t result;
+    int16_t *resultLrs; // array shall be allocated by `Init()` caller
+    int16_t resultLrsLength;
+} arraySearchLrsInstance_t;
+
 void arraySearchMaxSubarrayInstance_getInterface(void *instance, arraySearchInterface_t *interface);
+void arraySearchLrs_getInterface(void *instance, arraySearchInterface_t *interface);

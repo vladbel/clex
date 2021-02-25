@@ -10,7 +10,7 @@ static arraySearchInstance_t _runTest(int16_t *array, int16_t length)
     arraySearchMaxSubarrayInstance_getInterface((void *)&arraySearchInstance, &arraySearchInterface);
 
     arraySearchInterface_init(&arraySearchInterface, array, length);
-    arraySearchInterface_sort(&arraySearchInterface);
+    arraySearchInterface_search(&arraySearchInterface);
     return arraySearchInstance;
 }
 

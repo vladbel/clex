@@ -11,7 +11,7 @@ void  arraySearchInterface_init( arraySearchInterface_t *interface,
     }
 }
 
-void  arraySearchInterface_sort( arraySearchInterface_t *interface)
+void  arraySearchInterface_search( arraySearchInterface_t *interface)
 {
     if (interface != NULL && interface->context != NULL && interface-> search_fn != NULL)
     {
