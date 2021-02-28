@@ -8,11 +8,19 @@ void test_arraySearchInstance_01(void)
     int16_t result[8];
 
     arraySearchLrsInstance_t arraySearchLrsInstance;
+    arraySearchLrsInstance.array = array;
+    arraySearchLrsInstance.length = 8;
+    arraySearchLrsInstance.resultLrs = result;
+    arraySearchLrsInstance.resultLrsLength = 8;
     arraySearchInterface_t arraySearchInterface;
 
     arraySearchLrs_getInterface((void *)&arraySearchLrsInstance, &arraySearchInterface);
     arraySearchInterface_search(&arraySearchInterface);
+
     TEST_CHECK(arraySearchLrsInstance.result == 6);
+    TEST_CHECK(arraySearchLrsInstance.resultLrs[0] == -1);
+    TEST_CHECK(arraySearchLrsInstance.resultLrs[1] == 1);
+    TEST_CHECK(arraySearchLrsInstance.resultLrs[2] == -1);
 }
 
 /*

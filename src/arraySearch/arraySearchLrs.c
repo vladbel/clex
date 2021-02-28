@@ -5,33 +5,37 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+static bool _match (int16_t* array, int16_t i, int16_t j, int16_t length)
+{
+    for( int16_t ii = 0; ii < length; ii++)
+    {
+        if(array[i - ii] != array[j - ii])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 static void _search(void *context)
 {
     arraySearchLrsInstance_t *self = (arraySearchLrsInstance_t *)context;
     self->result = 6;
 
-    int16_t currentSequence[16] = {0};
+    int16_t currentSequence[8] = {0};
     int16_t currentSequenceLength = 0;
 
-    int16_t longestSequence[16] = {0};
+    int16_t longestSequence[8] = {0};
     int16_t longestSequenceLength = 0;
 
-    int16_t blank[16] = {0};
+    int16_t blank[8] = {0};
 
     for (uint16_t i = 0; i < self->length; i++)
     {
+        bool match = false;
         for (uint16_t j = i + 1; j < self->length; j++)
         {
-            bool match = true;
-            for (uint16_t k = 0; k < currentSequenceLength; k++)
-            {
-                if (self->array[j - k] != self->array[i - k])
-                {
-                    match = false;
-                    break;
-                }
-            }
-            if (match)
+            if (_match(self->array, i, j, currentSequenceLength + 1))
             {
                 currentSequence[currentSequenceLength] = self->array[i];
                 currentSequenceLength++;
@@ -41,18 +45,17 @@ static void _search(void *context)
                     // copy array
                     memcpy(longestSequence, currentSequence, sizeof(longestSequence));
                 }
-            }
-            else
-            {
-                memcpy(currentSequence, blank, sizeof(currentSequence));
-                currentSequenceLength = 1;
-                currentSequence[0] = self->array[i];
+                match = true;
+                break;
             }
         }
-        currentSequence[currentSequenceLength] = self->array[i];
-        currentSequenceLength++;
+        if (!match)
+        {
+            currentSequenceLength = 0;
+            memcpy(currentSequence, blank, sizeof(currentSequence));
+        }
     }
-    memcpy(self->resultLrs, longestSequence, sizeof(longestSequenceLength));
+    memcpy(self->resultLrs, longestSequence, sizeof(longestSequence));
     self->resultLrsLength = longestSequenceLength;
 }
 

@@ -34,7 +34,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/testSearchDebug",
             "args": [],
-            "stopAtEntry": true,
+            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
